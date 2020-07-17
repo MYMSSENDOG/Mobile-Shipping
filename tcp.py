@@ -1,4 +1,5 @@
 from socket import *
+import json
 import threading
 class Server(threading.Thread):
     def __init__(self, socket):
@@ -20,12 +21,14 @@ class Server(threading.Thread):
         while True:
             try:
                 get_data = self.c_socket.recv(1024)
+                if not get_data:
+                    break
                 print(get_data.decode("utf-8"))
             except:
                 self.c_socket.close()
                 print(self.c_socket,  "closed")
                 break
-
+        self.c_socket.close()
 def create_thread(s_socket):
     global index
     t.append(Server(s_socket))
@@ -42,7 +45,7 @@ s_socket = (AF_INET, SOCK_STREAM)
 server_socket = socket(AF_INET, SOCK_STREAM)
 server_socket.bind((HOST,PORT))
 print("bind")
-server_socket.listen(1)
+server_socket.listen(2000)
 print("listen")
 
 create_thread(server_socket)
