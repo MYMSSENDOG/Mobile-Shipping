@@ -1,5 +1,6 @@
 # -*- coding:cp949 -*-
 # TeraCopy 내부의 모든 윈도우 객체를 나열합니다.
+import cah
 import win32gui
 import pywintypes
 import sys
@@ -59,6 +60,16 @@ def GetChildWindows(windowname):
 
     return teracopyhwnd, childrenlist
 
+def GetClassNN(hwnd, extra):
+    if extra.get_class_name() != win32gui.GetClassName(hwnd):
+        pass
+    else:
+        extra.add_count()
+        if extra.get_hwnd() == hwnd:
+            return pywintypes.FALSE
+
+
+
 
 # main 입니다.
 
@@ -74,8 +85,12 @@ for child in childwnds:
     wnd_clas = win32gui.GetClassName(child)
     wnd_text = win32gui.GetWindowText(child)
     wnd_text = "".join(wnd_text.splitlines())
+    c = cah.Cah(child)
+    try:
+        win32gui.EnumChildWindows(hwnd, GetClassNN, c)
+    except pywintypes.error as e:
+        exit(0)
 
-
-    print ("%08X %6d        %s         %s   " % (child, ctrl_id, wnd_clas,wnd_text))
+    print ("%08X %6d        %s         %s   " % (child, ctrl_id, wnd_clas + str(c.get_count()),wnd_text))
 
 
