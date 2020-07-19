@@ -4,7 +4,8 @@ import cah
 import win32gui
 import pywintypes
 import sys
-
+import control_finder
+from collections import defaultdict
 app_name = "인성 퀵 서비스 [윤덕순] / [노원스마트물류-노원스마트물류]"
 app_name = "제목 없음 - Windows 메모장"
 app_name = "오더접수(신규)"
@@ -42,6 +43,7 @@ class ChildWindowFinder:
                 pass
 
     def __EnumChildWindowsHandler(self, hwnd, extra):
+
         self.__childwnds.append(hwnd)
 
     def GetChildrenList(self):
@@ -61,6 +63,7 @@ def GetChildWindows(windowname):
     return teracopyhwnd, childrenlist
 
 def GetClassNN(hwnd, extra):
+
     if extra.get_class_name() != win32gui.GetClassName(hwnd):
         pass
     else:
@@ -74,23 +77,37 @@ def GetClassNN(hwnd, extra):
 # main 입니다.
 
 hwnd, childwnds = GetChildWindows(app_name)
-print("%X %s" % (hwnd, win32gui.GetWindowText(hwnd)))
+cf = control_finder.Control_Finder()
+cntl_dir = cf.get_control_dir()
+counter_dict = defaultdict(int)
 
-print("HWND     CtlrID        Class               Window Text")
-print("===========================================")
-print(len(childwnds))
-print(hwnd)
+
+#print("%X %s" % (hwnd, win32gui.GetWindowText(hwnd)))
+
+#print("HWND     CtlrID        Class               Window Text")
+#print("===========================================")
+#print(len(childwnds))
+
 for child in childwnds:
     ctrl_id = win32gui.GetDlgCtrlID(child)
     wnd_clas = win32gui.GetClassName(child)
     wnd_text = win32gui.GetWindowText(child)
     wnd_text = "".join(wnd_text.splitlines())
+    parent = win32gui.GetParent(child)
+
+    counter_dict[wnd_clas] += 1
+    cur_count = counter_dict[wnd_clas]
+    if wnd_clas in cntl_dir:
+        if cur_count in cntl_dir[wnd_clas]:
+            name = cntl_dir[wnd_clas][cur_count]
+            cntl_dir[wnd_clas][name] = child
+            print(" find ", name)
     c = cah.Cah(child)
     try:
         win32gui.EnumChildWindows(hwnd, GetClassNN, c)
     except pywintypes.error as e:
         exit(0)
 
-    print ("%08X %6d        %s         %s   " % (child, ctrl_id, wnd_clas + str(c.get_count()),wnd_text))
+    print ("%08X %6d        %s         %s   %d" % (child, ctrl_id, wnd_clas + str(c.get_count()),wnd_text, parent))
 
 
