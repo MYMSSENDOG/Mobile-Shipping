@@ -26,6 +26,7 @@ class WindowFinder:
 
 class ChildWindowFinder:
     def __init__(self, parentwnd):
+        self.__childwnds = []
         try:
             win32gui.EnumChildWindows(parentwnd, self.__EnumChildWindowsHandler, None)
         except pywintypes.error as e:
@@ -39,7 +40,7 @@ class ChildWindowFinder:
     def GetChildrenList(self):
         return self.__childwnds
 
-    __childwnds = []
+
 def GetChildWindows(windowname):
 
     wf = WindowFinder(windowname)
@@ -69,3 +70,10 @@ def find_targets(childwnds, cf):
             if cur_count in cntl_dict[wnd_clas]:
                 name = cntl_dict[wnd_clas][cur_count]
                 cntl_dict[wnd_clas][name] = child
+def GetClassNN(hwnd, extra):
+    if extra.get_class_name() != win32gui.GetClassName(hwnd):
+        pass
+    else:
+        extra.add_count()
+        if extra.get_hwnd() == hwnd:
+            return pywintypes.FALSE
