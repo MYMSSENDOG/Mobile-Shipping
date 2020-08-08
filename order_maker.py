@@ -69,13 +69,27 @@ data_control_list = {"cstm_buyer": [EDIT, SET_TEXT, PRESS_ENTER],
                      "dest_pnumber": [EDIT, SET_TEXT],
                      "payment": [RADIO_BUTTON, RADIO_BUTTON_SELECT],
                      "car": [RADIO_BUTTON, RADIO_BUTTON_SELECT],
-                     "fee": [EDIT, SET_TEXT]
+                     "fee": [EDIT, SET_TEXT],
+                     "deliver": [RADIO_BUTTON, RADIO_BUTTON_SELECT],
+                     #"day": [RADIO_BUTTON, RADIO_BUTTON_SELECT]
                      }
 finish_control_list = {
     "share": [CHECK_BOX, CHECK_BOX_CLICK],
-    "save_order": [BUTTON, BUTTON_CLICK]
+    "save": [BUTTON, BUTTON_CLICK],
+    "close": [BUTTON, BUTTON_CLICK]
 }
 
+class NewWindow:
+    def __init__(self, control_dict):
+        self.control_dict = control_dict
+
+    def new_window_start(self):
+        wrapper = Button(self.control_dict["BUTTON"]["new"])
+        wrapper.click()
+
+    main_dlg_control_list = {
+        "new": [BUTTON, BUTTON_CLICK]
+    }
 class OrderMaker():
     def __init__(self, control_dict, data):
         self.control_dict = control_dict
@@ -101,8 +115,14 @@ class OrderMaker():
                     if c == SET_TEXT:
                         wrapper.set_text(value)
                     if c == PRESS_ENTER:
-                        wrapper.send_endter()
+                        if control == "cstm_buyer" or control == "start_name" or control == "dest_name":
+                            wrapper.send_enter()
+                        else:
+                            wrapper.post_enter()
+
                     if c == BUTTON_CLICK:
+                        if control == "close":
+                            time.sleep(10)
                         wrapper.click()
                     if c == RADIO_BUTTON_SELECT:
                         wrapper.select(value)
@@ -122,7 +142,14 @@ class OrderMaker():
                 time.sleep(0.5)
     def finalyze(self):
         for control in finish_control_list:
-            control_type = data_control_list[control][0]
+            if "test" in self.data:
+                if control == "save":
+                    continue
+            else:
+                if control == "close":
+                    continue
+
+            control_type = finish_control_list[control][0]
             if control_type == EDIT:
                 hwnd = self.control_dict["EDIT"][control]
                 wrapper = Edit(hwnd)
