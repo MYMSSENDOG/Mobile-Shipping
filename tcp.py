@@ -1,6 +1,14 @@
 from socket import *
 import json
 import threading
+import win32gui
+import pywintypes
+import control_finder
+import json
+import order_maker
+import window_finder
+import time
+
 class Server(threading.Thread):
     def __init__(self, socket):
         super().__init__()
@@ -20,10 +28,34 @@ class Server(threading.Thread):
         print("c_recv",self.c_socket)
         while True:
             try:
-                get_data = self.c_socket.recv(1024)
-                if not get_data:
-                    break
-                print(get_data.decode("utf-8"))
+                data = json.loads(self.c_socket.recv(1024))
+                print(data)
+                # 메인창 정보를 얻어와 오더접수 띄울 준비
+                main_app_name = "인성 퀵 서비스 [윤덕순] / [노원스마트물류-노원스마트물류]"
+                main_hwnd, main_childwnds = window_finder.GetChildWindows(main_app_name)
+                maincf = control_finder.MainDlgControlFinder()
+                window_finder.find_targets(main_childwnds, maincf)
+                main_control_dict = maincf.get_control_dict()
+                starter = order_maker.NewWindow(main_control_dict)
+                starter.new_window_start()
+
+                time.sleep(5)
+
+
+                order_dlg = "오더접수(신규)"
+                hwnd, childwnds = window_finder.GetChildWindows(order_dlg)
+                cf = control_finder.OrderControl_Finder()
+                window_finder.find_targets(childwnds, cf)
+                control_dict = cf.get_control_dict()
+                win32gui.SetForegroundWindow(hwnd)
+                om = order_maker.OrderMaker(control_dict, data)
+                om.make_order()
+                om.finalyze()
+
+
+
+
+
             except:
                 self.c_socket.close()
                 print(self.c_socket,  "closed")
