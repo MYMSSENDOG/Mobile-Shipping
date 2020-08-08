@@ -29,6 +29,22 @@
 
 접수 저장 버튼 WindowsForms10.Window.b.app.0.13965fa_r9_ad14
 """
+class MainDlgControlFinder:
+    def __init__(self):
+        self.__init_dict1()
+        pass
+
+    def __init_dict1(self):
+        self.controls_dict = {}
+        self.edit_dict = {}
+        self.btn_radio_dict = {}
+
+        self.controls_dict["EDIT"] = self.edit_dict
+        self.controls_dict["BUTTON"] = self.btn_radio_dict
+
+        self.btn_radio_dict[52] = "new"
+    def get_control_dict(self):
+        return self.controls_dict
 class OrderControl_Finder:
 
     #오더 접수 신규 창 뿐만 아니라 기본창도 추가 할 것
@@ -60,14 +76,17 @@ class OrderControl_Finder:
         self.edit_dict[19] = "dest_search"
         self.edit_dict[20] = "dest_pnumber"
 
-        self.edit_dict[8] = "fee"
 
-        self.btn_radio_dict[14] = "save_order_btnr"
-        self.btn_radio_dict[1] = "close_btn"
+        self.edit_dict[8] = "fee"
 
         self.btn_radio_dict[73] = "payment"
         self.btn_radio_dict[72] = "car"
+        self.btn_radio_dict[78] = "share"
+        self.btn_radio_dict[83] = "deliver"
 
+        self.btn_radio_dict[14] = "save"
+        self.btn_radio_dict[13] = "save_wait"
+        self.btn_radio_dict[1] = "close"
     def get_control_dict(self):
         return self.controls_dict
 
