@@ -1,5 +1,4 @@
 from socket import *
-import json
 import threading
 import win32gui
 import pywintypes
@@ -8,7 +7,7 @@ import json
 import order_maker
 import window_finder
 import time
-
+#db 연결 미리
 class Server(threading.Thread):
     def __init__(self, socket):
         super().__init__()
@@ -35,27 +34,22 @@ class Server(threading.Thread):
                 main_hwnd, main_childwnds = window_finder.GetChildWindows(main_app_name)
                 maincf = control_finder.MainDlgControlFinder()
                 window_finder.find_targets(main_childwnds, maincf)
-                main_control_dict = maincf.get_control_dict()
-                starter = order_maker.NewWindow(main_control_dict)
+                main_control_dict = maincf.get_control_dict()#위에서 쓸 컨트롤의 위치를 찾아 딕셔너리에 저장을 했다. 그것을 여기서 쓰려고 호출
+                starter = order_maker.NewWindow(main_control_dict)#실제 작업이 이루어지는 창을 키는 클래스
                 starter.new_window_start()
 
                 time.sleep(5)
 
 
                 order_dlg = "오더접수(신규)"
-                hwnd, childwnds = window_finder.GetChildWindows(order_dlg)
-                cf = control_finder.OrderControl_Finder()
-                window_finder.find_targets(childwnds, cf)
-                control_dict = cf.get_control_dict()
-                win32gui.SetForegroundWindow(hwnd)
-                om = order_maker.OrderMaker(control_dict, data)
+                hwnd, childwnds = window_finder.GetChildWindows(order_dlg)#아까와 다른점은 부모hwnd의 자식들 중에서만 검사를 함
+                cf = control_finder.OrderControl_Finder()#몇번에 뭐가 있는지 정의한 dictionary
+                window_finder.find_targets(childwnds, cf)#그것들을 다 찾아낸다.
+                control_dict = cf.get_control_dict()#딕셔너리 리턴받는다.
+                win32gui.SetForegroundWindow(hwnd)#guia를 실행하기 위해 오더접수 창을 가장 윗단으로 한다.
+                om = order_maker.OrderMaker(control_dict, data)#수신한 데이터로 접수 한다.
                 om.make_order()
                 om.finalyze()
-
-
-
-
-
             except:
                 self.c_socket.close()
                 print(self.c_socket,  "closed")

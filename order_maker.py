@@ -41,6 +41,8 @@ import time
 import control_finder
 
 import json
+#10이전까지 행동을 정의
+#10부터는 클래스를 정의
 SET_TEXT =              -1
 PRESS_ENTER =           0
 NEW_WINDOW =            1
@@ -55,6 +57,7 @@ BUTTON =                11
 RADIO_BUTTON =          12
 CHECK_BOX =             13
 
+#각각의 컨트롤에 대해, 만약 그 컨트롤에 대한 명령을 받으면 어떻게 처리해야하는지 딕셔너리 + 리스트로 구현
 data_control_list = {"cstm_buyer": [EDIT, SET_TEXT, PRESS_ENTER],
                      "cstm_search": [EDIT, SET_TEXT, PRESS_ENTER],
                      "cstm_name": [EDIT, SET_TEXT],
@@ -73,12 +76,13 @@ data_control_list = {"cstm_buyer": [EDIT, SET_TEXT, PRESS_ENTER],
                      "deliver": [RADIO_BUTTON, RADIO_BUTTON_SELECT],
                      #"day": [RADIO_BUTTON, RADIO_BUTTON_SELECT]
                      }
+#위에것이 할 수도 있고 안할 수도 있는 거라면 이건 화물 접수를 하기위해 반드시 해야하는 마무리 작업
 finish_control_list = {
     "share": [CHECK_BOX, CHECK_BOX_CLICK],
     "save": [BUTTON, BUTTON_CLICK],
     "close": [BUTTON, BUTTON_CLICK]
 }
-
+#메인 dlg에서 실제 작업을 할 dlg를 키는 작업을 하는 클래스
 class NewWindow:
     def __init__(self, control_dict):
         self.control_dict = control_dict
@@ -86,7 +90,7 @@ class NewWindow:
     def new_window_start(self):
         wrapper = Button(self.control_dict["BUTTON"]["new"])
         wrapper.click()
-
+    #지금은 쓰이지 않음
     main_dlg_control_list = {
         "new": [BUTTON, BUTTON_CLICK]
     }
@@ -94,12 +98,14 @@ class OrderMaker():
     def __init__(self, control_dict, data):
         self.control_dict = control_dict
         self.data = data
+    #받은 데이터는 "start_name" : "금천구" 이런식으로 되어 있다. 이를 data_control_list에서 찾아
     def make_order(self):
         for control in data_control_list:
             if control in self.data:
                 value = self.data[control]
                 control_type = data_control_list[control][0]
 
+                #데이터에서 받은 컨트롤의 클래스에 따라 컨트롤을 래핑해주고 컨트롤에 따라 정해진 명령을 수행함
                 if control_type == EDIT:
                     hwnd = self.control_dict["EDIT"][control]
                     wrapper = Edit(hwnd)

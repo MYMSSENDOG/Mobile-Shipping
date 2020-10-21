@@ -1,5 +1,5 @@
 import win32gui
-class Cah:
+class Cah:# class and handle
     def __init__(self, hwnd):
         self.__hwnd = hwnd
         self.__count = 0

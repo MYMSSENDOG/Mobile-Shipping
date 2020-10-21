@@ -29,6 +29,12 @@
 
 접수 저장 버튼 WindowsForms10.Window.b.app.0.13965fa_r9_ad14
 """
+
+
+
+#control들을 저장할 dictionary를 저장하고 있다. 내가 원하는 control을 찾을 수 있다.
+#main창에서 사용하는 컨트롤은 new버튼(신규화물) 하나 뿐이다. 또한 이것은 버튼중에 52번째로 등장한다.
+#self.btn_radio_dict[52] 에 new가 저장되며
 class MainDlgControlFinder:
     def __init__(self):
         self.__init_dict1()

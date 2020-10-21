@@ -10,12 +10,12 @@ WM_KEYUP = 257
 """
 from win32con import PAGE_READWRITE, MEM_COMMIT, MEM_RESERVE, MEM_RELEASE, PROCESS_ALL_ACCESS
 
-GetWindowThreadProcessId = ctypes.windll.user32.GetWindowThreadProcessId
-VirtualAllocEx = ctypes.windll.kernel32.VirtualAllocEx
-VirtualFreeEx = ctypes.windll.kernel32.VirtualFreeEx
-OpenProcess = ctypes.windll.kernel32.OpenProcess
-WriteProcessMemory = ctypes.windll.kernel32.WriteProcessMemory
-ReadProcessMemory = ctypes.windll.kernel32.ReadProcessMemory
+#GetWindowThreadProcessId = ctypes.windll.user32.GetWindowThreadProcessId
+#VirtualAllocEx = ctypes.windll.kernel32.VirtualAllocEx
+#VirtualFreeEx = ctypes.windll.kernel32.VirtualFreeEx
+#OpenProcess = ctypes.windll.kernel32.OpenProcess
+#WriteProcessMemory = ctypes.windll.kernel32.WriteProcessMemory
+#ReadProcessMemory = ctypes.windll.kernel32.ReadProcessMemory
 
 
 def makeParam (x, y):
